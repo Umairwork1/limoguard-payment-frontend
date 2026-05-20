@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Successful</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0f1117;
+      color: #e2e4ef;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #1a1d27;
+      border: 1px solid #2e3248;
+      border-radius: 16px;
+      padding: 48px 56px;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+    }
+    .icon {
+      width: 72px;
+      height: 72px;
+      background: rgba(22, 163, 74, 0.15);
+      border: 2px solid rgba(22, 163, 74, 0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 32px;
+    }
+    h1 { margin: 0 0 10px; font-size: 22px; font-weight: 700; }
+    p  { margin: 0 0 28px; font-size: 14px; color: #8b90a8; line-height: 1.6; }
+    .invoice-id {
+      font-family: monospace;
+      font-size: 13px;
+      background: rgba(79, 124, 246, 0.1);
+      border: 1px solid rgba(79, 124, 246, 0.25);
+      border-radius: 6px;
+      padding: 8px 14px;
+      margin-bottom: 28px;
+      word-break: break-all;
+    }
+    .invoice-id span { color: #8b90a8; font-size: 11px; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    a.btn {
+      display: inline-block;
+      background: #4f7cf6;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    a.btn:hover { background: #3b66e0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">✓</div>
+    <h1>Card Registered Successfully</h1>
+    <p>
+      Your payment was completed and your card has been saved as a token.
+      You can now charge it directly from the app without re-entering card details.
+    </p>
+
+    <div class="invoice-id" id="invoice-box" style="display:none">
+      <span>Invoice ID</span>
+      <span id="invoice-id-val"></span>
+    </div>
+
+    <a href="/" class="btn">Back to App</a>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const invoiceId = params.get('invoiceId') || params.get('Id') || params.get('id');
+    if (invoiceId) {
+      document.getElementById('invoice-id-val').textContent = invoiceId;
+      document.getElementById('invoice-box').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
