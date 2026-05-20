@@ -6,8 +6,8 @@ const CURRENCIES: CurrencyIso[] = ['KWD', 'SAR', 'BHD', 'AED', 'QAR', 'OMR', 'JO
 
 const DEFAULT_CALLBACK = 'http://localhost:3001/api/direct/callback';
 const DEFAULT_ERROR = 'http://localhost:3001/api/direct/error';
-const FRONTEND_SUCCESS = 'http://localhost:5173/payment-success.html';
-const FRONTEND_ERROR   = 'http://localhost:5173/payment-error.html';
+const FRONTEND_SUCCESS = 'https://limoguard-payments-frontend.vercel.app/payment-success.html';
+const FRONTEND_ERROR   = 'https://limoguard-payments-frontend.vercel.app/payment-error.html';
 
 interface Props {
   selectedMethodId?: number;
