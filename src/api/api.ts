@@ -9,7 +9,7 @@ import type {
   DirectToken,
 } from '../types/payment';
 
-const BASE = 'http://localhost:3001/api';
+const BASE = 'https://limoguard-payment.vercel.app/api';
 
 const client = axios.create({ baseURL: BASE });
 
