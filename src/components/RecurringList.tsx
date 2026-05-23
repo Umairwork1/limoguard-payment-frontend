@@ -23,7 +23,7 @@ export default function RecurringList({ onSelectId, refreshTrigger }: Props) {
     setLoading(true);
     try {
       const data = await api.listRecurrings();
-      setRecords(data);
+      setRecords(Array.isArray(data) ? data : []);
     } catch {
       // silently ignore sidebar errors
     } finally {

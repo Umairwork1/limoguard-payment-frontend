@@ -7,9 +7,12 @@ import type {
   DirectRegisterRequest,
   DirectChargeRequest,
   DirectToken,
+  V3CreateSessionRequest,
+  V3ChargeRequest,
+  V3Session,
 } from '../types/payment';
 
-const BASE = 'https://limoguard-payment.vercel.app/api';
+const BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
 const client = axios.create({ baseURL: BASE });
 
@@ -51,4 +54,23 @@ export const api = {
 
   deleteDirectToken: (tokenId: string) =>
     client.delete(`/direct/tokens/${tokenId}`).then((r) => r.data),
+
+  // ── V3 Vendor-Managed Recurring ─────────────────────────────────────────────
+
+  v3CreateSession: (data: V3CreateSessionRequest) =>
+    client.post('/v3/sessions', data).then((r) => r.data),
+
+  v3GetCustomerTokens: (reference: string) =>
+    client.get(`/v3/customers/${encodeURIComponent(reference)}`).then((r) => r.data),
+
+  v3ChargeToken: (data: V3ChargeRequest) =>
+    client.post('/v3/payments', data).then((r) => r.data),
+
+  v3ListSessions: (): Promise<V3Session[]> =>
+    client.get('/v3/sessions').then((r) => r.data),
+
+  // ── Webhooks ─────────────────────────────────────────────────────────────────
+
+  listWebhookEvents: (limit = 50) =>
+    client.get(`/webhooks/events?limit=${limit}`).then((r) => r.data),
 };

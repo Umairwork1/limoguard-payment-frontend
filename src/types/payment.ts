@@ -63,7 +63,44 @@ export interface DirectRegisterRequest {
 
 export interface DirectChargeRequest {
   invoiceValue: number;
-  currencyIso: CurrencyIso;
+  currencyIso: CurrencyIso; // maps to backend DirectChargeDto.currencyIso
+}
+
+// ── V3 Vendor-Managed Recurring ───────────────────────────────────────────────
+
+export interface V3CreateSessionRequest {
+  amount: number;
+  customerReference: string;
+  currency?: CurrencyIso;
+  paymentMode?: 'COMPLETE_PAYMENT' | 'COLLECT_DETAILS';
+  redirectionUrl?: string;
+}
+
+export interface V3ChargeRequest {
+  token?: string;
+  sessionId?: string;
+  amount?: number;
+  customerReference?: string;
+  language?: 'EN' | 'AR';
+}
+
+export interface V3Card {
+  Token: string;
+  Number: string;
+  Brand: string;
+  Is3DSVerified: boolean;
+  TokenType: string;
+}
+
+export interface V3Session {
+  _id: string;
+  customerReference: string;
+  sessionId: string;
+  sessionExpiry: string;
+  amount: number;
+  currency: string;
+  status: string;
+  createdAt: string;
 }
 
 export interface DirectToken {

@@ -10,8 +10,9 @@ interface Props {
   onCreated: () => void;
 }
 
-const DEFAULT_CALLBACK = 'http://localhost:3001/api/recurring/callback';
-const DEFAULT_ERROR = 'http://localhost:3001/api/recurring/error';
+const BACKEND = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+const DEFAULT_CALLBACK = `${BACKEND}/api/recurring/callback`;
+const DEFAULT_ERROR = `${BACKEND}/api/recurring/error`;
 
 export default function CreateRecurring({ selectedMethodId, onCreated }: Props) {
   const [form, setForm] = useState({
