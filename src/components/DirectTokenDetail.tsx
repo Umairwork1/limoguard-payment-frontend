@@ -106,10 +106,22 @@ export default function DirectTokenDetail({ prefillTokenId, onDeleteSuccess }: P
           </div>
 
           <div className="kv-grid">
-            {result.tokenId && (
+            {result.customerTokenId && (
               <div className="kv">
                 <span className="kv-label">Token ID</span>
-                <span className="kv-val badge">{result.tokenId}</span>
+                <span className="kv-val badge">{result.customerTokenId}</span>
+              </div>
+            )}
+            {result.maskedCard && (
+              <div className="kv">
+                <span className="kv-label">Card</span>
+                <span className="kv-val"><code>{result.maskedCard}</code></span>
+              </div>
+            )}
+            {result.paymentGateway && (
+              <div className="kv">
+                <span className="kv-label">Gateway</span>
+                <span className="kv-val">{result.paymentGateway}</span>
               </div>
             )}
             {result.customerName && (

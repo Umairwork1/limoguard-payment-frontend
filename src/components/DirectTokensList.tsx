@@ -63,19 +63,21 @@ export default function DirectTokensList({ onSelectToken, refreshTrigger }: Prop
             </span>
           </div>
           <div className="sidebar-customer">{t.customerName}</div>
-          <div className="sidebar-amount">{t.currencyIso}</div>
+          <div className="sidebar-amount">
+            {t.maskedCard ? <code style={{ fontSize: 11 }}>{t.maskedCard}</code> : t.currencyIso}
+          </div>
           <div className="sidebar-id-row">
-            <code className="sidebar-id" title={t.tokenId ?? t._id}>
-              {((t.tokenId ?? t._id) || '').length > 12
-                ? (t.tokenId ?? t._id).slice(0, 12) + '…'
-                : (t.tokenId ?? t._id)}
+            <code className="sidebar-id" title={t.customerTokenId}>
+              {t.customerTokenId
+                ? t.customerTokenId.length > 12 ? t.customerTokenId.slice(0, 12) + '…' : t.customerTokenId
+                : '(pending)'}
             </code>
-            <button className="btn-icon" onClick={() => copy(t.tokenId ?? t._id)} title="Copy token ID">
-              {copied === (t.tokenId ?? t._id) ? '✓' : '⎘'}
+            <button className="btn-icon" onClick={() => copy(t.customerTokenId)} title="Copy token ID">
+              {copied === (t.customerTokenId) ? '✓' : '⎘'}
             </button>
             <button
               className="btn-icon"
-              onClick={() => onSelectToken(t.tokenId ?? t._id)}
+              onClick={() => onSelectToken(t.customerTokenId)}
               title="Use this token"
             >
               →

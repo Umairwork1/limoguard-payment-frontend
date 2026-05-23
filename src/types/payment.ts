@@ -105,12 +105,15 @@ export interface V3Session {
 
 export interface DirectToken {
   _id: string;
-  tokenId: string;
-  recurringId?: string;
+  customerTokenId: string;
   invoiceId?: string;
+  invoiceUrl?: string;
   customerName: string;
   customerEmail: string;
   customerMobile: string;
+  customerReference?: string;
+  paymentGateway?: string;
+  maskedCard?: string;
   currencyIso: string;
   status: TokenStatus;
   createdAt: string;
