@@ -4,10 +4,10 @@ import type { CurrencyIso, Language } from '../types/payment';
 
 const CURRENCIES: CurrencyIso[] = ['KWD', 'SAR', 'BHD', 'AED', 'QAR', 'OMR', 'JOD', 'EGP'];
 
-const DEFAULT_CALLBACK = 'https://limoguard-payment.vercel.app/api/direct/callback';
-const DEFAULT_ERROR = 'https://limoguard-payment.vercel.app/api/direct/error';
-const FRONTEND_SUCCESS = 'https://limoguard-payments-frontend.vercel.app/payment-success.html';
-const FRONTEND_ERROR   = 'https://limoguard-payments-frontend.vercel.app/payment-error.html';
+const DEFAULT_CALLBACK = 'https://b3de-39-34-173-238.ngrok-free.app/api/direct/callback';
+const DEFAULT_ERROR = 'https://b3de-39-34-173-238.ngrok-free.app/api/direct/error';
+const FRONTEND_SUCCESS = 'http://localhost:5173//payment-success.html';
+const FRONTEND_ERROR   = 'http://localhost:5173/payment-error.html';
 
 interface Props {
   selectedMethodId?: number;

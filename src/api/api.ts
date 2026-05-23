@@ -7,9 +7,11 @@ import type {
   DirectRegisterRequest,
   DirectChargeRequest,
   DirectToken,
+  CreateSessionRequest,
+  CreateSessionResponse,
 } from '../types/payment';
 
-const BASE = 'https://limoguard-payment.vercel.app/api';
+const BASE = 'http://localhost:3002/api';
 
 const client = axios.create({ baseURL: BASE });
 
@@ -34,6 +36,9 @@ export const api = {
 
   // ── Direct Payment ──────────────────────────────────────────────────────────
 
+  createSession: (data: CreateSessionRequest): Promise<CreateSessionResponse> =>
+    client.post('/direct/session', data).then((r) => r.data),
+
   directInitiate: (data: DirectInitiateRequest) =>
     client.post('/direct/initiate', data).then((r) => r.data),
 
@@ -51,4 +56,8 @@ export const api = {
 
   deleteDirectToken: (tokenId: string) =>
     client.delete(`/direct/tokens/${tokenId}`).then((r) => r.data),
+
+  // Step 2 of v3 recurring: retrieve all saved cards for a customer from MyFatoorah
+  getCustomerCards: (customerReference: string) =>
+    client.get(`/direct/customers/${encodeURIComponent(customerReference)}/cards`).then((r) => r.data),
 };

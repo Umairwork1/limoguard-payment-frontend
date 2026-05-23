@@ -11,6 +11,8 @@ import RecurringList from './components/RecurringList';
 // Direct
 import DirectInitiate from './components/DirectInitiate';
 import DirectRegister from './components/DirectRegister';
+import SessionRegister from './components/SessionRegister';
+import CustomerCards from './components/CustomerCards';
 import DirectTokenDetail from './components/DirectTokenDetail';
 import DirectCharge from './components/DirectCharge';
 import DirectTokensList from './components/DirectTokensList';
@@ -21,7 +23,7 @@ import './App.css';
 
 type Section = 'recurring' | 'direct';
 type RecurringTab = 'initiate' | 'create' | 'get' | 'resume' | 'cancel';
-type DirectTab = 'initiate' | 'register' | 'detail' | 'charge';
+type DirectTab = 'initiate' | 'session' | 'customers' | 'charge' | 'detail' | 'register';
 
 const RECURRING_TABS: { id: RecurringTab; label: string }[] = [
   { id: 'initiate', label: '1. Get Methods' },
@@ -31,11 +33,14 @@ const RECURRING_TABS: { id: RecurringTab; label: string }[] = [
   { id: 'cancel', label: '5. Cancel' },
 ];
 
+// Tabs ordered to mirror the v3 vendor-managed recurring flow
 const DIRECT_TABS: { id: DirectTab; label: string }[] = [
-  { id: 'initiate', label: '1. Get Methods' },
-  { id: 'register', label: '2. Register Card' },
-  { id: 'detail', label: '3. Token Detail' },
-  { id: 'charge', label: '4. Charge Token' },
+  { id: 'session',    label: '① Tokenize Card' },
+  { id: 'customers',  label: '② Customer Cards' },
+  { id: 'charge',     label: '③ Charge Token' },
+  { id: 'detail',     label: 'Token Detail' },
+  { id: 'initiate',   label: 'Get Methods' },
+  { id: 'register',   label: 'Register (Hosted)' },
 ];
 
 export default function App() {
@@ -48,7 +53,7 @@ export default function App() {
   const [recurringRefresh, setRecurringRefresh] = useState(0);
 
   // Direct state
-  const [directTab, setDirectTab] = useState<DirectTab>('initiate');
+  const [directTab, setDirectTab] = useState<DirectTab>('session');
   const [directMethodId, setDirectMethodId] = useState<number | undefined>();
   const [directAmount, setDirectAmount] = useState<number | undefined>();
   const [directCurrency, setDirectCurrency] = useState<CurrencyIso | undefined>();
@@ -74,9 +79,15 @@ export default function App() {
     setDirectCurrency(currency);
     setDirectTab('register');
   };
+  // Sidebar token click → Token Detail
   const handleTokenSelect = (tokenId: string) => {
     setActiveTokenId(tokenId);
     setDirectTab('detail');
+  };
+  // CustomerCards "Charge →" click → Charge Token tab pre-filled
+  const handleChargeSelect = (tokenId: string) => {
+    setActiveTokenId(tokenId);
+    setDirectTab('charge');
   };
 
   return (
@@ -179,6 +190,12 @@ export default function App() {
                       prefillCurrency={directCurrency}
                       onRegistered={refreshDirect}
                     />
+                  )}
+                  {directTab === 'session' && (
+                    <SessionRegister onRegistered={refreshDirect} />
+                  )}
+                  {directTab === 'customers' && (
+                    <CustomerCards onChargeToken={handleChargeSelect} />
                   )}
                   {directTab === 'detail' && (
                     <DirectTokenDetail

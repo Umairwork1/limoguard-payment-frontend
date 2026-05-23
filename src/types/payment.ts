@@ -48,6 +48,34 @@ export interface DirectInitiateRequest {
   currencyIso: CurrencyIso;
 }
 
+export interface MobileInput {
+  countryCode: string;
+  number: string;
+}
+
+export interface CreateSessionRequest {
+  invoiceValue: number;
+  customerName: string;
+  customerEmail: string;
+  customerMobile: MobileInput;
+  customerReference: string;
+  currency?: string;
+  language?: 'EN' | 'AR';
+  paymentMode?: 'COMPLETE_PAYMENT' | 'COLLECT_DETAILS';
+  callBackUrl?: string;
+  errorUrl?: string;
+}
+
+export interface CreateSessionResponse {
+  IsSuccess: boolean;
+  Message: string;
+  Data: {
+    SessionId: string;
+    EncryptionKey: string;
+    CountryCode: string;
+  };
+}
+
 export interface DirectRegisterRequest {
   paymentMethodId: number;
   invoiceValue: number;
