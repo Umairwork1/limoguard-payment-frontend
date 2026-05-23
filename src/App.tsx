@@ -19,6 +19,7 @@ import DirectTokensList from './components/DirectTokensList';
 import V3CreateSession from './components/V3CreateSession';
 import V3GetCustomer from './components/V3GetCustomer';
 import V3Charge from './components/V3Charge';
+import V3FastPay from './components/V3FastPay';
 import V3SessionsList from './components/V3SessionsList';
 import WebhookEvents from './components/WebhookEvents';
 
@@ -29,7 +30,7 @@ import './App.css';
 type Section = 'recurring' | 'direct' | 'v3' | 'webhooks';
 type RecurringTab = 'initiate' | 'create' | 'get' | 'resume' | 'cancel';
 type DirectTab = 'initiate' | 'register' | 'detail' | 'charge';
-type V3Tab = 'session' | 'tokens' | 'charge';
+type V3Tab = 'session' | 'tokens' | 'charge' | 'fastpay';
 
 const SECTIONS: Section[] = ['recurring', 'direct', 'v3', 'webhooks'];
 const RECURRING_TABS: { id: RecurringTab; label: string }[] = [
@@ -49,6 +50,7 @@ const V3_TABS: { id: V3Tab; label: string }[] = [
   { id: 'session', label: '1. Create Session' },
   { id: 'tokens', label: '2. Get Tokens' },
   { id: 'charge', label: '3. Charge Token' },
+  { id: 'fastpay', label: '4. FastPay (No CVV)' },
 ];
 
 // ── URL param helpers ──────────────────────────────────────────────────────────
@@ -79,7 +81,9 @@ function readDirectTab(): DirectTab {
 }
 function readV3Tab(): V3Tab {
   const t = getParam('vt');
-  return V3_TABS.some((x) => x.id === t) ? (t as V3Tab) : 'session';
+  return (['session', 'tokens', 'charge', 'fastpay'] as V3Tab[]).includes(t as V3Tab)
+    ? (t as V3Tab)
+    : 'session';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -247,6 +251,7 @@ export default function App() {
                     <V3GetCustomer prefillReference={v3Reference} onTokenSelect={handleV3TokenSelect} />
                   )}
                   {v3Tab === 'charge' && <V3Charge prefillToken={v3Token} />}
+                  {v3Tab === 'fastpay' && <V3FastPay prefillReference={v3Reference} />}
                 </div>
               </main>
             </>
