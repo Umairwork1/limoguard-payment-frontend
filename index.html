@@ -9,6 +9,12 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <!-- MyFatoorah JS SDK -->
+    <script src="https://demo.myfatoorah.com/payment/v1/session.js"></script>
+    <script>
+      console.log('[SDK-check] window.myfatoorah =', window.myfatoorah);
+      console.log('[SDK-check] fato* globals =', Object.keys(window).filter(function(k){ return k.toLowerCase().includes('fato'); }));
+    </script>
   </head>
   <body>
     <div id="root"></div>

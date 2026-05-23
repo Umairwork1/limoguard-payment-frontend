@@ -9,15 +9,15 @@ interface Props {
 }
 
 export default function DirectCharge({ prefillTokenId }: Props) {
-  const [tokenId, setTokenId] = useState(prefillTokenId || '');
+  const [token,        setToken]        = useState(prefillTokenId || '');
   const [invoiceValue, setInvoiceValue] = useState(10);
-  const [currencyIso, setCurrencyIso] = useState<CurrencyIso>('KWD');
-  const [result, setResult] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [currency,     setCurrency]     = useState<CurrencyIso>('KWD');
+  const [result,       setResult]       = useState<unknown>(null);
+  const [loading,      setLoading]      = useState(false);
+  const [error,        setError]        = useState('');
 
   useEffect(() => {
-    if (prefillTokenId) setTokenId(prefillTokenId);
+    if (prefillTokenId) setToken(prefillTokenId);
   }, [prefillTokenId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,13 +26,18 @@ export default function DirectCharge({ prefillTokenId }: Props) {
     setError('');
     setResult(null);
     try {
-      const res = await api.chargeDirectToken(tokenId.trim(), {
+      const res = await api.paymentCharge({
+        token       : token.trim(),
         invoiceValue: Number(invoiceValue),
-        currencyIso,
+        currency,
       });
       setResult(res);
-    } catch (err: any) {
-      setError(err?.response?.data?.message || err.message);
+    } catch (err: unknown) {
+      setError(
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message
+        ?? (err as Error)?.message
+        ?? 'Unknown error'
+      );
     } finally {
       setLoading(false);
     }
@@ -40,24 +45,24 @@ export default function DirectCharge({ prefillTokenId }: Props) {
 
   return (
     <div>
-      <h2 className="section-title">Charge Saved Token</h2>
+      <h2 className="section-title">③ Charge Token</h2>
       <p className="section-desc">
-        Calls <code>POST /api/direct/tokens/:tokenId/charge</code> to charge a saved card directly
-        without any redirect — the payment is processed server-side using the stored token.
+        Calls <code>POST /api/payment/charge</code> — charges a saved card token directly
+        without any redirect. Use the token from <strong>Step 2 → Customer Cards</strong>.
       </p>
 
       <form onSubmit={handleSubmit} className="form">
         <div className="form-row">
-          <label>Token ID</label>
+          <label>Card Token</label>
           <input
             type="text"
-            value={tokenId}
-            onChange={(e) => setTokenId(e.target.value)}
-            placeholder="e.g. abc123"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            placeholder="Token from Step 2 → Customer Cards"
             required
           />
-          {prefillTokenId && tokenId === prefillTokenId && (
-            <span className="hint">Auto-filled from Tokens sidebar</span>
+          {prefillTokenId && token === prefillTokenId && (
+            <span className="hint">Auto-filled from Customer Cards</span>
           )}
         </div>
         <div className="form-grid">
@@ -75,13 +80,11 @@ export default function DirectCharge({ prefillTokenId }: Props) {
           <div className="form-row">
             <label>Currency</label>
             <select
-              value={currencyIso}
-              onChange={(e) => setCurrencyIso(e.target.value as CurrencyIso)}
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value as CurrencyIso)}
             >
               {CURRENCIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
+                <option key={c} value={c}>{c}</option>
               ))}
             </select>
           </div>
@@ -98,16 +101,16 @@ export default function DirectCharge({ prefillTokenId }: Props) {
         <div className="result-box">
           <div className="alert alert-success">Token charged successfully.</div>
           <div className="kv-grid">
-            {result?.Data?.InvoiceId && (
+            {(result as { Data?: { InvoiceId?: string } })?.Data?.InvoiceId && (
               <div className="kv">
                 <span className="kv-label">Invoice ID</span>
-                <span className="kv-val">{result.Data.InvoiceId}</span>
+                <span className="kv-val">{(result as { Data: { InvoiceId: string } }).Data.InvoiceId}</span>
               </div>
             )}
-            {result?.Data?.InvoiceStatus && (
+            {(result as { Data?: { InvoiceStatus?: string } })?.Data?.InvoiceStatus && (
               <div className="kv">
                 <span className="kv-label">Status</span>
-                <span className="kv-val">{result.Data.InvoiceStatus}</span>
+                <span className="kv-val">{(result as { Data: { InvoiceStatus: string } }).Data.InvoiceStatus}</span>
               </div>
             )}
           </div>

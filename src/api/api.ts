@@ -7,9 +7,11 @@ import type {
   DirectRegisterRequest,
   DirectChargeRequest,
   DirectToken,
+  CreateSessionRequest,
+  PaymentChargeRequest,
 } from '../types/payment';
 
-const BASE = 'https://limoguard-payment.vercel.app/api';
+const BASE = 'http://localhost:3002/api';
 
 const client = axios.create({ baseURL: BASE });
 
@@ -32,6 +34,20 @@ export const api = {
   listRecurrings: (): Promise<RecurringRecord[]> =>
     client.get('/recurring').then((r) => r.data),
 
+  // ── v3 Vendor-Managed Recurring ─────────────────────────────────────────────
+
+  // Step 1 — POST /payment/session → SessionId + EncryptionKey for JS SDK
+  createSession: (data: CreateSessionRequest) =>
+    client.post('/payment/session', data).then((r) => r.data),
+
+  // Step 1b — After SDK callback fires with paymentData, verify with backend
+  verifyPayment: (data: { paymentData: string; encryptionKey: string; reference: string }) =>
+    client.post('/payment/verify', data).then((r) => r.data),
+
+  // Step 2 — GET /v3/customers → saved tokenized cards for a customer reference
+  getCustomerCards: (customerReference: string) =>
+    client.get(`/payment/customers?Reference=${encodeURIComponent(customerReference)}`).then((r) => r.data),
+
   // ── Direct Payment ──────────────────────────────────────────────────────────
 
   directInitiate: (data: DirectInitiateRequest) =>
@@ -51,4 +67,8 @@ export const api = {
 
   deleteDirectToken: (tokenId: string) =>
     client.delete(`/direct/tokens/${tokenId}`).then((r) => r.data),
+
+  // POST /payment/charge — charge a saved card token directly
+  paymentCharge: (data: PaymentChargeRequest) =>
+    client.post('/payment/charge', data).then((r) => r.data),
 };
