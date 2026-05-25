@@ -7,7 +7,9 @@ const BACKEND = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 const DEFAULT_REDIRECT = `${BACKEND}/api/v3/callback`;
 
 // Test env: demo.myfatoorah.com  |  Production: portal.myfatoorah.com
-const SDK_URL = 'https://demo.myfatoorah.com/sessions/v1/session.js';
+//const SDK_URL = 'https://demo.myfatoorah.com/sessions/v1/session.js';
+// for UAE
+const SDK_URL ='https://ae.myfatoorah.com/sessions/v1/session.js';
 
 type PaymentMode = 'COMPLETE_PAYMENT' | 'COLLECT_DETAILS';
 
