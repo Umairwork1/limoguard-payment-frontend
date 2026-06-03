@@ -1,6 +1,8 @@
 export default function PaymentSuccess() {
   const params = new URLSearchParams(window.location.search);
-  const invoiceId = params.get('invoiceId') || params.get('Id') || params.get('paymentId');
+  const invoiceId = params.get('invoiceId') || params.get('Id');
+  const recurringId = params.get('recurringId');
+  const paymentId = params.get('paymentId');
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f0fdf4' }}>
@@ -8,13 +10,13 @@ export default function PaymentSuccess() {
         <div style={{ fontSize: 64, marginBottom: 16 }}>✓</div>
         <h1 style={{ color: '#16a34a', marginBottom: 8, fontSize: 28 }}>Payment Successful</h1>
         <p style={{ color: '#6b7280', marginBottom: 24 }}>
-          Your card has been saved and the payment was processed successfully.
+          Your payment was processed successfully and the recurring schedule is now active.
         </p>
-        {invoiceId && (
-          <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 8, padding: '10px 16px', marginBottom: 24, fontSize: 13 }}>
-            Invoice ID: <strong>{invoiceId}</strong>
-          </div>
-        )}
+        <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 8, padding: '12px 16px', marginBottom: 24, fontSize: 13, textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {invoiceId && <div>Invoice ID: <strong>{invoiceId}</strong></div>}
+          {recurringId && <div>Recurring ID: <strong>{recurringId}</strong></div>}
+          {paymentId && <div>Payment ID: <strong>{paymentId}</strong></div>}
+        </div>
         <button
           onClick={() => window.location.href = '/'}
           style={{ background: '#16a34a', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 28px', fontSize: 15, cursor: 'pointer' }}

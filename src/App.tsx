@@ -1,5 +1,8 @@
 import { useState, useCallback } from 'react';
 
+import PaymentSuccess from './components/PaymentSuccess';
+import PaymentError from './components/PaymentError';
+
 // Recurring
 import InitiatePayment from './components/InitiatePayment';
 import CreateRecurring from './components/CreateRecurring';
@@ -89,6 +92,9 @@ function readV3Tab(): V3Tab {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function App() {
+  const path = window.location.pathname;
+  if (path === '/payment-success') return <PaymentSuccess />;
+  if (path === '/payment-error') return <PaymentError />;
   const [section, _setSection] = useState<Section>(readSection);
   const [recurringTab, _setRecurringTab] = useState<RecurringTab>(readRecurringTab);
   const [directTab, _setDirectTab] = useState<DirectTab>(readDirectTab);
