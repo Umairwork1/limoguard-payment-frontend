@@ -63,7 +63,27 @@ export interface DirectRegisterRequest {
 
 export interface DirectChargeRequest {
   invoiceValue: number;
-  currencyIso: CurrencyIso; // maps to backend DirectChargeDto.currencyIso
+  currencyIso: CurrencyIso;
+  cardCvv?: string;
+}
+
+export interface DirectSaveCardRequest {
+  paymentMethodId: number;
+  invoiceValue: number;
+  customerName: string;
+  customerEmail: string;
+  customerMobile: string;
+  cardNumber: string;
+  cardExpiryMonth: string;
+  cardExpiryYear: string;
+  cardCvv: string;
+  cardHolderName: string;
+  bypass3ds?: boolean;
+  displayCurrencyIso?: CurrencyIso;
+  language?: Language;
+  callBackUrl?: string;
+  errorUrl?: string;
+  customerReference?: string;
 }
 
 // ── V3 Vendor-Managed Recurring ───────────────────────────────────────────────
@@ -118,6 +138,26 @@ export interface DirectToken {
   status: TokenStatus;
   createdAt: string;
   updatedAt: string;
+}
+
+// ── Embedded Payment (limoguard-backend) ─────────────────────────────────────
+
+export interface EmbeddedSessionRequest {
+  driver_id: string;
+  is_recurring?: boolean;
+  save_token?: boolean;
+}
+
+export interface EmbeddedExecuteRequest {
+  driver_id: string;
+  invoice_value: number;
+  callback_url: string;
+  error_url: string;
+}
+
+export interface EmbeddedSessionData {
+  SessionId: string;
+  CountryCode: string;
 }
 
 // ── Recurring ─────────────────────────────────────────────────────────────────

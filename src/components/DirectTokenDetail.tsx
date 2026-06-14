@@ -98,7 +98,7 @@ export default function DirectTokenDetail({ prefillTokenId, onDeleteSuccess }: P
             {status && (
               <span
                 className="status-badge"
-                style={{ background: STATUS_COLORS[status] || '#6b7280' }}
+                style={{ background: STATUS_COLORS[status?.toLowerCase()] || '#6b7280' }}
               >
                 {status}
               </span>

@@ -57,7 +57,7 @@ export default function DirectTokensList({ onSelectToken, refreshTrigger }: Prop
           <div className="sidebar-item-top">
             <span
               className="sidebar-status"
-              style={{ background: STATUS_COLORS[t.status] || '#6b7280' }}
+              style={{ background: STATUS_COLORS[t.status?.toLowerCase()] || '#6b7280' }}
             >
               {t.status}
             </span>

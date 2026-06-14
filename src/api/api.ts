@@ -6,6 +6,7 @@ import type {
   DirectInitiateRequest,
   DirectRegisterRequest,
   DirectChargeRequest,
+  DirectSaveCardRequest,
   DirectToken,
   V3CreateSessionRequest,
   V3ChargeRequest,
@@ -42,6 +43,9 @@ export const api = {
 
   directRegister: (data: DirectRegisterRequest) =>
     client.post('/direct/register', data).then((r) => r.data),
+
+  directSaveCard: (data: DirectSaveCardRequest) =>
+    client.post('/direct/save-card', data).then((r) => r.data),
 
   listDirectTokens: (): Promise<DirectToken[]> =>
     client.get('/direct/tokens').then((r) => r.data),

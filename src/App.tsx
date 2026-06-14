@@ -14,6 +14,7 @@ import RecurringList from './components/RecurringList';
 // Direct (v2)
 import DirectInitiate from './components/DirectInitiate';
 import DirectRegister from './components/DirectRegister';
+import DirectSaveCard from './components/DirectSaveCard';
 import DirectTokenDetail from './components/DirectTokenDetail';
 import DirectCharge from './components/DirectCharge';
 import DirectTokensList from './components/DirectTokensList';
@@ -26,16 +27,17 @@ import V3FastPay from './components/V3FastPay';
 import V3SessionsList from './components/V3SessionsList';
 import WebhookEvents from './components/WebhookEvents';
 
+import EmbeddedPayment from './components/EmbeddedPayment';
 import ErrorBoundary from './components/ErrorBoundary';
 import type { CurrencyIso } from './types/payment';
 import './App.css';
 
-type Section = 'recurring' | 'direct' | 'v3' | 'webhooks';
+type Section = 'recurring' | 'direct' | 'v3' | 'webhooks' | 'embedded';
 type RecurringTab = 'initiate' | 'create' | 'get' | 'resume' | 'cancel';
-type DirectTab = 'initiate' | 'register' | 'detail' | 'charge';
+type DirectTab = 'initiate' | 'register' | 'save-card' | 'detail' | 'charge';
 type V3Tab = 'session' | 'tokens' | 'charge' | 'fastpay';
 
-const SECTIONS: Section[] = ['recurring', 'direct', 'v3', 'webhooks'];
+const SECTIONS: Section[] = ['recurring', 'direct', 'v3', 'webhooks', 'embedded'];
 const RECURRING_TABS: { id: RecurringTab; label: string }[] = [
   { id: 'initiate', label: '1. Get Methods' },
   { id: 'create', label: '2. Create Recurring' },
@@ -45,9 +47,10 @@ const RECURRING_TABS: { id: RecurringTab; label: string }[] = [
 ];
 const DIRECT_TABS: { id: DirectTab; label: string }[] = [
   { id: 'initiate', label: '1. Get Methods' },
-  { id: 'register', label: '2. Register Card' },
-  { id: 'detail', label: '3. Token Detail' },
-  { id: 'charge', label: '4. Charge Token' },
+  { id: 'register', label: '2. Register (Redirect)' },
+  { id: 'save-card', label: '3. Save Card (Direct)' },
+  { id: 'detail', label: '4. Token Detail' },
+  { id: 'charge', label: '5. Charge Token' },
 ];
 const V3_TABS: { id: V3Tab; label: string }[] = [
   { id: 'session', label: '1. Create Session' },
@@ -72,7 +75,7 @@ function setParams(updates: Record<string, string>) {
 
 function readSection(): Section {
   const s = getParam('s');
-  return SECTIONS.includes(s as Section) ? (s as Section) : 'recurring';
+  return (SECTIONS as string[]).includes(s) ? (s as Section) : 'recurring';
 }
 function readRecurringTab(): RecurringTab {
   const t = getParam('rt');
@@ -143,7 +146,7 @@ export default function App() {
   // Direct handlers
   const refreshDirect = () => setDirectRefresh((n) => n + 1);
   const handleDirectMethodSelect = (methodId: number, amount: number, currency: CurrencyIso) => {
-    setDirectMethodId(methodId); setDirectAmount(amount); setDirectCurrency(currency); setDirectTab('register');
+    setDirectMethodId(methodId); setDirectAmount(amount); setDirectCurrency(currency); setDirectTab('save-card');
   };
   const handleTokenSelect = (tokenId: string) => { setActiveTokenId(tokenId); setDirectTab('detail'); };
 
@@ -179,6 +182,9 @@ export default function App() {
           </button>
           <button className={`section-btn ${section === 'webhooks' ? 'section-btn--active' : ''}`} onClick={() => setSection('webhooks')}>
             Webhooks
+          </button>
+          <button className={`section-btn ${section === 'embedded' ? 'section-btn--active' : ''}`} onClick={() => setSection('embedded')}>
+            Embedded Pay
           </button>
         </div>
 
@@ -227,6 +233,9 @@ export default function App() {
                   {directTab === 'register' && (
                     <DirectRegister selectedMethodId={directMethodId} prefillAmount={directAmount} prefillCurrency={directCurrency} onRegistered={refreshDirect} />
                   )}
+                  {directTab === 'save-card' && (
+                    <DirectSaveCard selectedMethodId={directMethodId} prefillAmount={directAmount} prefillCurrency={directCurrency} onSaved={refreshDirect} />
+                  )}
                   {directTab === 'detail' && (
                     <DirectTokenDetail prefillTokenId={activeTokenId} onDeleteSuccess={() => { refreshDirect(); setActiveTokenId(''); }} />
                   )}
@@ -270,6 +279,16 @@ export default function App() {
               <WebhookEvents />
             </div>
           </main>
+        )}
+
+        {section === 'embedded' && (
+          <ErrorBoundary>
+            <main className="main-content">
+              <div className="tab-content">
+                <EmbeddedPayment />
+              </div>
+            </main>
+          </ErrorBoundary>
         )}
       </div>
     </div>

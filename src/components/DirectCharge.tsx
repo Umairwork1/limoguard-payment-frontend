@@ -12,6 +12,7 @@ export default function DirectCharge({ prefillTokenId }: Props) {
   const [tokenId, setTokenId] = useState(prefillTokenId || '');
   const [invoiceValue, setInvoiceValue] = useState(10);
   const [currencyIso, setCurrencyIso] = useState<CurrencyIso>('KWD');
+  const [cardCvv, setCardCvv] = useState('');
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -29,6 +30,7 @@ export default function DirectCharge({ prefillTokenId }: Props) {
       const res = await api.chargeDirectToken(tokenId.trim(), {
         invoiceValue: Number(invoiceValue),
         currencyIso,
+        ...(cardCvv.trim() && { cardCvv: cardCvv.trim() }),
       });
       setResult(res);
     } catch (err: any) {
@@ -84,6 +86,17 @@ export default function DirectCharge({ prefillTokenId }: Props) {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="form-row">
+            <label>CVV (optional — required for 3DS tokens)</label>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={cardCvv}
+              onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+              placeholder="123"
+              maxLength={4}
+            />
           </div>
         </div>
 
